@@ -17,6 +17,12 @@ AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
 class Consumer(oauth2.Consumer):
     pass
 
+class AuthToken(oauth2.Token):
+    pass
+
+class Client(oauth2.Client):
+    pass
+
 class Token(object):
     def __init__(self, consumer):
         self.consumer = consumer

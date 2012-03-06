@@ -1,5 +1,7 @@
 
 import re
+import urllib
+import json
 
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.http import HttpResponseRedirect
@@ -45,12 +47,27 @@ def twitter_callback(request):
     # get an access token from Twitter
     consumer           = oauth.Consumer(settings.KEY, settings.SECRET)
     access_token       = oauth.AccessToken(consumer, oauth_token, oauth_verifier)
+
+    oauth_token = oauth.AuthToken(access_token.token, access_token.secret)
+    oauth_consumer = oauth.Consumer(settings.KEY, settings.SECRET)
+    oauth_client = oauth.Client(oauth_consumer, oauth_token)
     
+    # get user information
+    data = {"skip_status": True, "include_entities": False }
+    verify_uri = settings.VERIFY_CREDENTIALS
+    resp, content = oauth_client.request(verify_uri, 'GET', urllib.urlencode(data))
+
+    if resp.status != 200:
+        # failed to get user info, should actually check for 401
+        return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
+    user_info = json.loads(content)
+
     # actually log in
     user = authenticate(twitter_id  = access_token.user_id,
-                        username    = access_token.username,
+                        screen_name = access_token.username,
                         token       = access_token.token,
-                        secret      = access_token.secret)
+                        secret      = access_token.secret,
+                        user_info   = user_info)
     login(request, user)
     
     # redirect to the authenticated view

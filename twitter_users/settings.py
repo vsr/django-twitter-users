@@ -16,3 +16,4 @@ PROFILE_MODULE       = getattr(settings, 'AUTH_PROFILE_MODULE',
                                          'twitter_users.models.UserProfile')
 USERS_FORMAT         = getattr(settings, 'TWITTER_USERS_FORMAT', '%s')
 
+VERIFY_CREDENTIALS   = 'https://api.twitter.com/1/account/verify_credentials.json'
