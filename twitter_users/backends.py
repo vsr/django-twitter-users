@@ -12,7 +12,7 @@ class TwitterBackend(object):
         def copy_info(user_info, info):
             # There must be a better way of doing this. I don't know :$
             if user_info['lang']: info.lang = user_info['lang']
-            if user_info['created_at']: info.joined = datetime.strptime(user_info['created_at'], "%a %b %d %H:%M:%S +0000 %Y")
+            if user_info['created_at']: info.joined_on = datetime.strptime(user_info['created_at'], "%a %b %d %H:%M:%S +0000 %Y")
             if user_info['url']: info.url = user_info['url']
             if user_info['profile_image_url']: info.profile_image = user_info['profile_image_url']
             if user_info['protected']: info.protected = user_info['protected']
